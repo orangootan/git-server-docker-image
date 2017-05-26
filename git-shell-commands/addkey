@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Read in the SSH key
+echo "Input the key to be added:"
+read key
+
+# Place the key in a temporary file (it's hard to get ssh-keygen
+# to read from stdin; <<< works for bash, but is non-posix)
+keyfile=`mktemp -t` && \
+echo "$key" > $keyfile
+
+# Generate fingerprint
+fingerprint=`ssh-keygen -lf $keyfile`
+
+# Check for errors
+if [ `echo "$fingerprint" | egrep -c '(R|D)SA'` -eq 0 ]; then
+	echo "Error: $fingerprint"
+	rm $keyfile
+	exit 1
+fi
+
+# Add the key to the authorised keys file and clean up
+mkdir -p .ssh && \
+echo -n "restrict,pty " >> .ssh/authorized_keys && \
+cat $keyfile >> .ssh/authorized_keys
+rm $keyfile
+
+# Display the fingerprint for reference
+echo "Success! Added a key with the following fingerprint:"
+echo $fingerprint

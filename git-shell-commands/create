@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# if no args show usage
+if [ $# -eq 0 ]; then
+    echo "Usage: create project1 project2 ..."
+    exit 1
+fi
+
+# remove unneeded chars, collapse slashes, remove leading and trailing slashes, add .git extension and make absolute path
+dir=`pwd`
+projects=`for arg in $*; do echo $arg; done | \
+    sed 's;[^[:alnum:]/_-];;g' | \
+    sed 's://*:/:g' | \
+    sed 's:^/::' | \
+    sed 's:/$::' | \
+    sed "s:.*:$dir/&.git:"`
+
+# create repositories
+for project in $projects; do
+    mkdir -p $project && \
+    cd $project && \
+    git --bare init
+done
