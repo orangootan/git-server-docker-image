@@ -1,4 +1,4 @@
-FROM ring0club/git:2.14.1-r1
+FROM ring0club/git:2.14.2-r0
 RUN apk add openssh --no-cache
 RUN ssh-keygen -A && \
     adduser -D -g 'git' -s /usr/bin/git-shell git && \
