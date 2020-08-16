@@ -1,4 +1,4 @@
-FROM ring0club/git:2.27.0-r0
+FROM ring0club/git:2.28.0-r1
 RUN apk add openssh-server --no-cache
 #RUN ssh-keygen -A (generate your own server keys in /etc/ssh volume)
 RUN adduser -D -g 'git' -s /usr/bin/git-shell git && \
